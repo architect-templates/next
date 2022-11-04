@@ -1,0 +1,42 @@
+.container {
+  padding: 1rem !important;
+  margin-top: 1.5rem !important;
+  margin-right: auto;
+  margin-left: auto;
+  max-width: 85%;
+}
+
+.card-container {
+  padding: 1rem !important;
+  text-align: left;
+}
+
+#card-header {
+  display: inline;
+  text-align: center;
+  background-color: none !important;
+  padding-bottom: 0.5rem !important;
+}
+
+.card {
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+  width: 75%;
+  background-color: #C8EECD !important;
+  margin: 30px auto 0 auto;
+}
+
+.card p {
+  text-align: left;
+}
+
+.cmp_input {
+  padding: 0.2rem 0.4rem;
+  font-size: 0.875em;
+  color: #fff;
+  background-color: #212529;
+  border-radius: 0.2rem;
+  direction: ltr;
+  unicode-bidi: bidi-override;
+  box-sizing: border-box;
+  font-family: SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;
+}
