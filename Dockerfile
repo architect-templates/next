@@ -39,8 +39,4 @@ COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
 USER nextjs
 
-# TODO: remove the two things below?
-EXPOSE 3000
-ENV PORT 3000
-
 CMD ["node", "server.js"]

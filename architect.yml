@@ -11,15 +11,10 @@ keywords:
 
 # Add secrets to be used by different services. For more information:
 # https://docs.architect.io/deployments/secrets/
-secrets: # TODO: remove?
-  service_api_port:
-    description: Port for Lightweight-api service
+secrets:
+  service_port:
+    description: Port for app service
     default: 3000
-
-## Want to learn about dependencies? Follow along with "Adding a Dependency" in the README
-##   then uncomment the two lines below and uncomment line 41 (REACT_APP_API_ADDR)
-# dependencies:
-#   node-rest-api: latest # TODO
 
 # Below are the configured services for the React component. Note that the actual
 # react application we're working on is defined as a service on line 22
@@ -34,9 +29,10 @@ services:
         NODE_ENV: production # TODO: does next want one or the other?
     # Main interface port used to help define the url in the `interfaces` block on line 53
     interfaces:
-      main: 3000
+      main: ${{secrets.service_port }}
     # Set environment variables for your application here
     environment:
+      PORT: ${{ services.app.interfaces.main.port }}
       API_ADDR: ${{ services.lightweight-api.interfaces.http.url }}
       NODE_ENV: production
     # The liveness_probe makes sure the application is healthy - if not, it will re-start the application
@@ -81,7 +77,7 @@ services:
   lightweight-api:
     image: registry.gitlab.com/architect-io/artifacts/nodejs-hello-world:latest # TODO: ask about hosting this under architect account on gitlab?
     interfaces:
-      http: ${{ secrets.service_api_port }}
+      http: 3000
 
 # interfaces are used to expose our application to the gateway, allowing
 #   other services and dependencies to connect to one another.
@@ -92,8 +88,3 @@ interfaces:
     url: ${{ services.app.interfaces.main.url }}
     ingress:
       subdomain: app
-  # # Interface for our API layer
-  # lightweight-api:
-  #   url: ${{ services.lightweight-api.interfaces.http.url }}
-  #   ingress:
-  #     subdomain: service-api
