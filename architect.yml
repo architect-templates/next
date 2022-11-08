@@ -1,9 +1,8 @@
 name: nextjs
 
-description: |
-  Example component that includes a React frontend
+description: Example NextJS component that calls a lightweight API
 
-homepage: https://github.com/architect-templates/nextjs
+homepage: https://github.com/architect-templates/next
 
 keywords:
   - nextjs
@@ -16,20 +15,18 @@ secrets:
     description: Port for app service
     default: 3000
 
-# Below are the configured services for the React component. Note that the actual
-# react application we're working on is defined as a service on line 22
+# Below are the configured services for the NextJS component. Note that the actual
+# NextJS application we're working on is defined as a service on line 23
 # For more info - https://docs.architect.io/components/services/
 services:
-  ### This service is the actual React component ###
+  ### This service is the actual NextJS component ###
   app:
     # Build context is the location of your application relative to the architect.yml file
     build:
       context: ./
-      args:
-        NODE_ENV: production # TODO: does next want one or the other?
-    # Main interface port used to help define the url in the `interfaces` block on line 53
+    # Main interface port used to help define the url in the `interfaces` block on line 82
     interfaces:
-      main: ${{secrets.service_port }}
+      main: ${{ secrets.service_port }}
     # Set environment variables for your application here
     environment:
       PORT: ${{ services.app.interfaces.main.port }}
@@ -41,7 +38,7 @@ services:
       initial_delay: 30s
       interval: 30s
       failure_threshold: 3
-    # We want our app to start up after the db is running so that we can connect to it on startup!
+    # We want our app to start up after the API is running so that we can connect to it on startup!
     # This block contains a list of services we need to start before 'app' starts.
     depends_on:
       - lightweight-api
@@ -49,19 +46,16 @@ services:
     #   application while running `architect dev`. For more info, see -
     #   https://docs.architect.io/components/local-configuration/#hot-reloading
     debug:
-      # command: npm run dev # TODO: remove?
       build:
         # Use a different Dockerfile for local development that supports hot reloading
         dockerfile: Dockerfile.dev
-        args:
-          NODE_ENV: development # TODO: does next want one or the other?
       environment:
         NODE_ENV: development
       volumes:
         pages:
           # The `WORKDIR` defined in the Dockerfile (/app) + name of source code directory (/pages)
           mount_path: /app/pages
-          # Path to source code relative to the architect.yml file (/src)
+          # Path to source code relative to the architect.yml file (./pages)
           host_path: ./pages
         lib:
           mount_path: /app/lib
@@ -75,7 +69,7 @@ services:
   #   through service discovery. For more info, check out:
   #   https://docs.architect.io/components/service-discovery/
   lightweight-api:
-    image: registry.gitlab.com/architect-io/artifacts/nodejs-hello-world:latest # TODO: ask about hosting this under architect account on gitlab?
+    image: registry.gitlab.com/architect-io/artifacts/nodejs-hello-world:latest
     interfaces:
       http: 3000
 
