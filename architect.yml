@@ -78,11 +78,3 @@ services:
     image: registry.gitlab.com/architect-io/artifacts/nodejs-hello-world:latest
     interfaces:
       http: 3000
-
-
-# interfaces:
-#   # Interface for our main NextJS Application
-#   app:
-#     url: ${{ services.app.interfaces.main.url }}
-#     ingress:
-#       subdomain: app
