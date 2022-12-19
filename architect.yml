@@ -26,7 +26,13 @@ services:
       context: ./
     # Main interface port used to help define the url in the `interfaces` block on line 82
     interfaces:
-      main: ${{ secrets.service_port }}
+      main:
+        port: ${{ secrets.service_port }}
+        # ingresses are used to expose the application to the gateway, allowing
+        #   other services and dependencies to connect to it.
+        #   For more info - https://docs.architect.io/components/interfaces/
+        ingress:
+          subdomain: app
     # Set environment variables for your application here
     environment:
       PORT: ${{ services.app.interfaces.main.port }}
@@ -72,13 +78,3 @@ services:
     image: registry.gitlab.com/architect-io/artifacts/nodejs-hello-world:latest
     interfaces:
       http: 3000
-
-# interfaces are used to expose our application to the gateway, allowing
-#   other services and dependencies to connect to one another.
-#   For more info - https://docs.architect.io/components/interfaces/
-interfaces:
-  # Interface for our main NextJS Application
-  app:
-    url: ${{ services.app.interfaces.main.url }}
-    ingress:
-      subdomain: app
