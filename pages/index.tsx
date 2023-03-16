@@ -1,23 +1,60 @@
 import Image from 'next/image';
 import styles from '../styles/Home.module.css';
 
-// This function connects to the other service included in the Architect component to fetch the output "Hello World!"
-export async function getServerSideProps() {
-  const res = await fetch(`${process.env.API_ADDR}`);
-  const hello_world_text = await res.text();
-  return { props: { hello_world_text } };
-}
+// // This function connects to the other service included in the Architect component to fetch the output "Hello World!"
+// export async function getServerSideProps() {
+//   const res = await fetch(`${process.env.API_ADDR}`);
+//   const hello_world_text = await res.text();
+//   return { props: { hello_world_text } };
+// } // TODO: attach postgres
 
 export default function Home({ hello_world_text }: { hello_world_text: string }) {
   return (
     <div className={styles.container}>
-      {/* <h1>Uncomment me to see hot reloading in action!</h1> */}
       <p>
         <a href="//architect.io" target="blank" rel="noopener noreferrer">
           <Image src="https://cdn.architect.io/logo/horizontal.png" width={400} height={59.5} alt="Architect Logo" />
         </a>
       </p>
-      <div className={styles.card}>
+
+      <br />
+
+      <form method="post">
+        <div className={styles['user-inputs']}>
+          <div className={styles['form-control']}>
+            <input id="title" type="text" placeholder="Title*"/>
+            <p style={{color: 'red', textAlign: 'left'}}></p>
+          </div>
+          <div className={styles['form-control']}>
+            <input id="rating" type="number" placeholder="Rating (1-5)*"/>
+            <p style={{color: 'red', textAlign: 'left'}}></p>
+          </div>
+        </div>
+        <button type="submit">Submit</button>
+      </form>
+
+      <br />
+
+      <div>
+        <table>
+          <thead>
+            <tr>
+              <th>Movie Title</th>
+              <th>Movie Rating</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>test</td>
+              <td>test</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div>
+        No entries found
+      </div>
+      {/* <div className={styles.card}>
         <div className={styles['card-container']}>
           <div id="card-header">
             <h4><b>{ hello_world_text }</b></h4>
@@ -42,7 +79,7 @@ export default function Home({ hello_world_text }: { hello_world_text: string })
             </ul>
           </div>
         </div>
-      </div>
+      </div> */}
     </div>
   )
 }
