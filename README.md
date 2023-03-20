@@ -39,7 +39,7 @@ displayed for you to select from.
 ######################################
 
 Creating project directory... ✓
-Pulling down GitHub repository... ✓ next
+Pulling down GitHub repository... ✓ nextjs
 
 Successfully created project my-starter-project.
 
