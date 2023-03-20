@@ -27,6 +27,8 @@ services:
     # Build context is the location of your application relative to the architect.yml file
     build:
       context: ./
+    # entrypoint used to start the application with environment variables set
+    entrypoint: bin/entrypoint.sh
     # Main interface port used to help define the url in the `interfaces` block on line 82
     interfaces:
       main:
@@ -40,9 +42,7 @@ services:
     environment:
       PORT: ${{ services.app.interfaces.main.port }}
       NODE_ENV: production
-      POSTGRES_USERNAME: ${{ secrets.database_user }}
-      POSTGRES_PASSWORD: ${{ secrets.database_password }}
-      POSTGRES_URL: postgresql://${{ services.database.interfaces.main.host }}:${{ services.database.interfaces.main.port }}/${{ secrets.database_name }}
+      DATABASE_URL: postgresql://${{ secrets.database_user }}:${{ secrets.database_password }}@${{ services.database.interfaces.main.host }}:${{ services.database.interfaces.main.port }}/${{ secrets.database_name }}
     # The liveness_probe makes sure the application is healthy - if not, it will re-start the application
     liveness_probe:
       command: curl --fail localhost:3000/
@@ -60,6 +60,8 @@ services:
       build:
         # Use a different Dockerfile for local development that supports hot reloading
         dockerfile: Dockerfile.dev
+      # entrypoint used to start the application with environment variables set
+      entrypoint: bin/entrypoint-dev.sh
       environment:
         NODE_ENV: development
       volumes:

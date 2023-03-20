@@ -119,32 +119,7 @@ th, td {
   border-left: 1px solid #dee2e6;
 }
 
-.container {
-  margin-right: auto;
-  margin-left: auto;
-  max-width: 600px;
-}
-
-.form-control {
-  vertical-align: top;
-  display: inline-block;
-  width: calc(50% - 3px);
-}
-
-.logo {
-  padding-top: 1rem;
-}
-
-.user-inputs {
-  margin-bottom: 1rem;
-  text-align: center;
-}
-
 @font-face {
   font-family: Arimo;
   src: url("https://fonts.googleapis.com/css2?family=Arimo");
 }
-
-/*
-  TODO: de-duplicate with global
-*/
