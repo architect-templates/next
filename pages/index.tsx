@@ -1,3 +1,4 @@
+import Head from 'next/head';
 import Image from 'next/image';
 import { GetServerSideProps } from 'next/types';
 import React, { useState } from 'react';
@@ -41,10 +42,16 @@ export default function Home({ ratings }: { ratings: MovieRatingEntity[] }) {
     const response = await fetch('/api/movie-rating', options);
     const new_rating = await response.json();
     setMovieRatings([...movie_ratings, new_rating]);
+    (target.title as HTMLInputElement).value = '';
+    (target.rating as HTMLInputElement).value = '';
   };
 
   return (
     <div className={styles.container}>
+      <Head>
+        <title>Architect Next.js Example</title>
+      </Head>
+
       <p className={styles.logo}>
         <a href="//architect.io" target="blank" rel="noopener noreferrer">
           <Image src="https://cdn.architect.io/logo/horizontal.png" width={400} height={59.5} alt="Architect Logo" />
@@ -53,7 +60,7 @@ export default function Home({ ratings }: { ratings: MovieRatingEntity[] }) {
 
       <br />
 
-      <h1>Movie ratings</h1>
+      <h1>Favorite Movies</h1>
 
       <br />
 
