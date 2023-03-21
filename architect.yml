@@ -94,3 +94,7 @@ services:
         username: ${{ secrets.database_user }}
         password: ${{ secrets.database_password }}
         path: /${{ secrets.database_name }}
+    liveness_probe:
+      command: pg_isready -d ${{ secrets.database_name }} -U ${{ secrets.database_user }}
+      interval: 10s
+      failure_threshold: 3
