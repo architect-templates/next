@@ -11,9 +11,12 @@ keywords:
 # Add secrets to be used by different services. For more information:
 # https://docs.architect.io/deployments/secrets/
 secrets:
-  service_port:
-    description: Port for app service
-    default: 3000
+  database_name:
+    default: default_db
+  database_user:
+    default: default_user
+  database_password:
+    default: default_pw
 
 # Below are the configured services for the NextJS component. Note that the actual
 # NextJS application we're working on is defined as a service on line 23
@@ -24,10 +27,12 @@ services:
     # Build context is the location of your application relative to the architect.yml file
     build:
       context: ./
+    # entrypoint used to start the application with environment variables set
+    entrypoint: bin/entrypoint.sh
     # Main interface port used to help define the url in the `interfaces` block on line 82
     interfaces:
       main:
-        port: ${{ secrets.service_port }}
+        port: 3000
         # ingresses are used to expose the application to the gateway, allowing
         #   other services and dependencies to connect to it.
         #   For more info - https://docs.architect.io/components/interfaces/
@@ -36,8 +41,8 @@ services:
     # Set environment variables for your application here
     environment:
       PORT: ${{ services.app.interfaces.main.port }}
-      API_ADDR: ${{ services.lightweight-api.interfaces.http.url }}
       NODE_ENV: production
+      DATABASE_URL: postgresql://${{ secrets.database_user }}:${{ secrets.database_password }}@${{ services.database.interfaces.main.host }}:${{ services.database.interfaces.main.port }}/${{ secrets.database_name }}
     # The liveness_probe makes sure the application is healthy - if not, it will re-start the application
     liveness_probe:
       command: curl --fail localhost:3000/
@@ -47,7 +52,7 @@ services:
     # We want our app to start up after the API is running so that we can connect to it on startup!
     # This block contains a list of services we need to start before 'app' starts.
     depends_on:
-      - lightweight-api
+      - database
     # Debug block is used to enable hot-reloading to make real-time changes to an
     #   application while running `architect dev`. For more info, see -
     #   https://docs.architect.io/components/local-configuration/#hot-reloading
@@ -55,6 +60,8 @@ services:
       build:
         # Use a different Dockerfile for local development that supports hot reloading
         dockerfile: Dockerfile.dev
+      # entrypoint used to start the application with environment variables set
+      entrypoint: bin/entrypoint-dev.sh
       environment:
         NODE_ENV: development
       volumes:
@@ -70,11 +77,24 @@ services:
           mount_path: /app/styles
           host_path: ./styles
 
-  #  This is an additional service that adds a lightweight API to the
-  #   application to show off Architect's support for microservice architecture
+  # This is an additional service that adds a postgres database
+  #   to show off Architect's support for microservice architecture
   #   through service discovery. For more info, check out:
   #   https://docs.architect.io/components/service-discovery/
-  lightweight-api:
-    image: registry.gitlab.com/architect-io/artifacts/nodejs-hello-world:latest
+  database:
+    image: postgres:14
+    environment:
+      POSTGRES_DB: ${{ secrets.database_name }}
+      POSTGRES_USER: ${{ secrets.database_user }}
+      POSTGRES_PASSWORD: ${{ secrets.database_password }}
     interfaces:
-      http: 3000
+      main:
+        port: 5432
+        protocol: postgresql
+        username: ${{ secrets.database_user }}
+        password: ${{ secrets.database_password }}
+        path: /${{ secrets.database_name }}
+    liveness_probe:
+      command: pg_isready -d ${{ secrets.database_name }} -U ${{ secrets.database_user }}
+      interval: 10s
+      failure_threshold: 3
