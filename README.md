@@ -115,7 +115,6 @@ You are now ready to deploy your component to your environment in Architect's co
 run the following command from the `next` directory:
 
 ```sh
-architect deploy --account <account-name> \
---environment my-first-environment ./architect.yml
+architect deploy --account <account-name> --environment my-first-environment ./architect.yml
 ```
 Congrats! You've deployed your first component using Architect.
